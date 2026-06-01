@@ -2,7 +2,7 @@
 
 ### React + Vite + Node.js + Express
 
-> A hands-on, fill-in-the-blanks teaching project designed to give you real-world full-stack experience for the San Diego software market.
+> A hands-on, fill-in-the-blanks teaching project designed to give you real-world full-stack experience.
 
 ---
 
@@ -144,29 +144,6 @@ Every file has:
 | **jsonwebtoken**    | JWT auth tokens                    | https://www.npmjs.com/package/jsonwebtoken |
 | **dotenv**          | Environment variable loader        | https://www.npmjs.com/package/dotenv       |
 | **cors**            | Cross-origin resource sharing      | https://www.npmjs.com/package/cors         |
-
----
-
-## San Diego Job Market Context
-
-Local companies actively hiring full-stack devs (React/Node):
-
-- **Qualcomm** — React dashboards, internal tools
-- **ServiceNow** — Enterprise SaaS (React heavy)
-- **Intuit** (San Diego office) — TurboTax, React ecosystem
-- **Dexcom** — Healthcare tech, React + Node APIs
-- **Redfin** — React frontend, Node microservices
-- **TechHire SD / CONNECT** — Local startup ecosystem
-
-**What they look for:**
-
-- CRUD apps with auth (exactly what this project teaches)
-- Component-based architecture knowledge
-- REST API design
-- Git workflow (make commits as you complete each TODO)
-- Ability to read and understand existing codebases
-
----
 
 ## Completion Checklist
 
