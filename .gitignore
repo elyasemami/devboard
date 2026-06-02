@@ -21,3 +21,9 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+
+#postman
+.postman
+.postman/
+

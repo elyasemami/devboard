@@ -27,6 +27,8 @@ function Navbar() {
     // TODO: Call logout() then redirect to '/'
     // HINT: logout() is from useAuth
     // HINT: navigate('/') redirects after logout
+    await logout();
+    navigate('/');
   }
 
   return (
@@ -55,7 +57,11 @@ function Navbar() {
         {isAuthenticated ? (
           <>
             {/* TODO: Add Tasks link, user name display, and logout button */}
+            <Link to="/tasks"> Tasks</Link>
             <span>Hello, {user?.name}</span>
+            <button onClick={handleLogout}>Logout</button>
+            
+
           </>
         ) : (
           <Link to="/login">Login</Link>

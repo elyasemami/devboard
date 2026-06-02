@@ -59,7 +59,9 @@ const register = async (req, res) => {
     }
 
     // TODO: Validate password length
-
+    if (password.length() < 8) {
+      res.status(400).json({message: 'password must be more than 8 characters!'})
+    }
     // TODO: Create user (wrap in try/catch for duplicate email error)
     const user = await UserModel.create({ name, email, password })
 
