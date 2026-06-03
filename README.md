@@ -1,8 +1,6 @@
 # 🧱 DevBoard — Full-Stack Learning Boilerplate
 ### React + Vite + Node.js + Express
 
-> A hands-on, fill-in-the-blanks teaching project designed to give you real-world full-stack experience for the San Diego software market.
-
 ---
 
 ## 📚 What You'll Learn
