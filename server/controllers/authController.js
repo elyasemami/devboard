@@ -1,154 +1,84 @@
 // server/controllers/authController.js
 // RESOURCE: https://www.npmjs.com/package/jsonwebtoken#usage
 //
-// EXPLANATION: Controllers
-// Controllers hold the BUSINESS LOGIC for each route.
-// They receive the request, interact with the model, and send a response.
-// Keeping logic here (not in route files) keeps code organized and testable.
+// EXPLANATION: Controllers handle the business logic for each route.
+// req.body   = JSON the client sent
+// req.user   = set by authenticate middleware (protected routes only)
+// res.status(201).json({}) = send a response with HTTP status + JSON body
 //
-// Controller function signature: async (req, res) => {}
-//   req.body   = JSON data sent by the client (login form data, etc.)
-//   req.params = URL parameters (/tasks/:id — id is a param)
-//   req.query  = Query string (/tasks?status=done — status is a query param)
-//   req.user   = Set by authenticate middleware (only on protected routes)
-//
-// Response methods:
-//   res.status(200).json({...})  ← Send JSON with HTTP status code
-//   res.json({...})              ← Implicitly 200
-//   Standard codes: 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized,
-//                   404 Not Found, 409 Conflict, 500 Internal Server Error
+// HTTP status codes:
+//   200 OK | 201 Created | 400 Bad Request | 401 Unauthorized | 409 Conflict
 
-const jwt      = require('jsonwebtoken')
+const jwt       = require('jsonwebtoken')
 const UserModel = require('../models/userModel')
 
-// ── REGISTER ────────────────────────────────────────────────────────────────
-const register = async (req, res) => {
-  // TODO: Implement user registration
-  //
-  // Steps:
-  // 1. Destructure from req.body: const { name, email, password } = req.body
-  //
-  // 2. Validate inputs — all three are required:
-  //    if (!name || !email || !password) {
-  //      return res.status(400).json({ message: 'Name, email, and password are required' })
-  //    }
-  //
-  // 3. Validate password length:
-  //    if (password.length < 6) {
-  //      return res.status(400).json({ message: 'Password must be at least 6 characters' })
-  //    }
-  //
-  // 4. Try creating the user: const user = await UserModel.create({ name, email, password })
-  //    UserModel.create throws if email already exists — catch it!
-  //
-  // 5. Create a JWT token:
-  //    const token = jwt.sign(
-  //      { userId: user.id },           ← payload (data encoded in the token)
-  //      process.env.JWT_SECRET,         ← secret key for signing
-  //      { expiresIn: process.env.JWT_EXPIRES_IN }  ← expiry
-  //    )
-  //
-  // 6. Respond with 201 Created:
-  //    res.status(201).json({ message: 'Account created', user, token })
-
+// POST /api/auth/register
+const register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body
+    // TODO: Step 1 — Destructure name, email, password from req.body
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email, and password are required' })
-    }
+    // TODO: Step 2 — Validate all three fields are present
+    // HINT: if (!name || !email || !password) return res.status(400).json({...})
 
-    // TODO: Validate password length
-    if (password.length() < 8) {
-      res.status(400).json({message: 'password must be more than 8 characters!'})
-    }
-    // TODO: Create user (wrap in try/catch for duplicate email error)
-    const user = await UserModel.create({ name, email, password })
+    // TODO: Step 3 — Validate password is at least 6 characters
 
-    // TODO: Generate JWT token
-    const token = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-    )
+    // TODO: Step 4 — Create the user
+    // HINT: const user = await UserModel.create({ name, email, password })
+    // UserModel.create throws if the email is already taken — catch it below
 
-    res.status(201).json({ message: 'Account created successfully', user, token })
+    // TODO: Step 5 — Sign a JWT token
+    // HINT: const token = jwt.sign(
+    //         { userId: user.id },
+    //         process.env.JWT_SECRET,
+    //         { expiresIn: process.env.JWT_EXPIRES_IN }
+    //       )
+
+    // TODO: Step 6 — Respond with 201 Created
+    // HINT: res.status(201).json({ message: 'Account created', user, token })
 
   } catch (error) {
-    // Handle specific errors
     if (error.message === 'Email already registered') {
-      return res.status(409).json({ message: error.message }) // 409 Conflict
+      return res.status(409).json({ message: error.message })
     }
-    // Pass unexpected errors to the error handler middleware
     next(error)
   }
 }
 
-// ── LOGIN ────────────────────────────────────────────────────────────────────
-const login = async (req, res) => {
-  // TODO: Implement login
-  //
-  // Steps:
-  // 1. Destructure: const { email, password } = req.body
-  //
-  // 2. Validate that both are provided
-  //
-  // 3. Find the user: const user = UserModel.findByEmail(email)
-  //    If !user → 401 Unauthorized: "Invalid email or password"
-  //    (Don't say "email not found" — tells attackers which emails exist)
-  //
-  // 4. Verify the password: const match = await UserModel.verifyPassword(password, user.password)
-  //    If !match → 401: "Invalid email or password"
-  //
-  // 5. Create JWT token (same as in register)
-  //
-  // 6. Build a safe user object (no password):
-  //    const { password: _, ...safeUser } = user
-  //
-  // 7. Respond 200: { message: 'Login successful', user: safeUser, token }
-
+// POST /api/auth/login
+const login = async (req, res, next) => {
   try {
-    const { email, password } = req.body
+    // TODO: Step 1 — Destructure email, password from req.body
 
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' })
-    }
+    // TODO: Step 2 — Validate both fields are present
 
-    // TODO: Find user and verify password
+    // TODO: Step 3 — Find the user by email
+    // HINT: const user = UserModel.findByEmail(email)
+    // HINT: If !user → 401: "Invalid email or password"
+    //       Don't reveal which field is wrong — security best practice
 
-    const user = UserModel.findByEmail(email)
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' })
-    }
+    // TODO: Step 4 — Verify the password
+    // HINT: const match = await UserModel.verifyPassword(password, user.password)
+    // HINT: If !match → 401: "Invalid email or password"
 
-    const match = await UserModel.verifyPassword(password, user.password)
-    if (!match) {
-      return res.status(401).json({ message: 'Invalid email or password' })
-    }
+    // TODO: Step 5 — Sign a JWT token (same as register)
 
-    // TODO: Generate token and send response
-    const token = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-    )
+    // TODO: Step 6 — Build a safe user object (no password field)
+    // HINT: const { password: _, ...safeUser } = user
+    // This destructures "password" out and collects the rest in safeUser
 
-    const { password: _, ...safeUser } = user
-
-    res.json({ message: 'Login successful', user: safeUser, token })
+    // TODO: Step 7 — Respond with 200
+    // HINT: res.json({ message: 'Login successful', user: safeUser, token })
 
   } catch (error) {
     next(error)
   }
 }
 
-// ── GET CURRENT USER ─────────────────────────────────────────────────────────
-// Protected route — req.user is set by authenticate middleware
+// GET /api/auth/me  (protected)
 const getMe = async (req, res) => {
-  // TODO: Return the currently logged-in user
-  // HINT: req.user is set by the authenticate middleware
+  // TODO: Return the current user from req.user
+  // req.user was set by the authenticate middleware
   // HINT: res.json({ user: req.user })
-  res.json({ user: req.user })
 }
 
 module.exports = { register, login, getMe }

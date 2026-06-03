@@ -2,30 +2,25 @@
 // RESOURCE: https://jwt.io/introduction
 // RESOURCE: https://reactrouter.com/en/main/hooks/use-navigate
 //
-// EXPLANATION: The Login Flow
-// 1. User fills out form and submits
-// 2. Frontend sends POST /api/auth/login with { email, password }
-// 3. Server validates credentials, returns { user, token }
-// 4. Frontend stores the token (via AuthContext.login())
-// 5. Redirect to /tasks — user is now "logged in"
-//
-// The token is a JWT (JSON Web Token) — a signed string that proves identity.
-// On every subsequent request, the frontend sends the token in the header.
-// The server verifies the token to know who's making the request.
+// EXPLANATION: Login flow:
+// 1. User submits form → POST /api/auth/login with { email, password }
+// 2. Server returns { user, token }
+// 3. Call login(user, token) to save to context + localStorage
+// 4. Redirect to /tasks
 
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { authAPI } from '../services/api'
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' })
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [isRegister, setIsRegister] = useState(false) // Toggle login/register
+  const [error, setError]       = useState(null)
+  const [loading, setLoading]   = useState(false)
+  const [isRegister, setIsRegister] = useState(false)
 
   const { login } = useAuth()
-  const navigate = useNavigate()
+  const navigate  = useNavigate()
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -37,29 +32,20 @@ function Login() {
     setLoading(true)
 
     try {
-      let response
+      // TODO: Call the correct API function based on isRegister
+      // If registering: authAPI.register(formData)
+      // If logging in:  authAPI.login(formData)
+      // HINT: let response = await authAPI.login(formData)
 
-      if (isRegister) {
-        // TODO: Call authAPI.register with formData
-        // formData needs a name field too — add it to the initial state and form
-        // HINT: response = await authAPI.register(formData)
-      } else {
-        // TODO: Call authAPI.login with formData
-        // HINT: response = await authAPI.login(formData)
-      }
-
-      // TODO: After successful response:
+      // TODO: After a successful response:
       // 1. Call login(response.data.user, response.data.token)
-      //    This saves the user and token to context + localStorage
-      // 2. Redirect to '/tasks' using navigate('/tasks')
-      //    navigate replaces the current history entry (they can't go back to login)
+      // 2. navigate('/tasks') to redirect
 
     } catch (err) {
-      // TODO: Display the error from the server
-      // HINT: err.response?.data?.message contains the server's error message
-      // The ?. is "optional chaining" — safe even if err.response is undefined
+      // TODO: Set error from the server response
+      // HINT: err.response?.data?.message  — the ?. is "optional chaining"
+      // It safely accesses nested properties even if a parent is undefined
       // RESOURCE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
-      setError(err.response?.data?.message || 'Authentication failed')
     } finally {
       setLoading(false)
     }
@@ -70,12 +56,8 @@ function Login() {
       <div className="auth-card">
         <h1>{isRegister ? 'Create Account' : 'Sign In'}</h1>
         <p className="auth-subtitle">
-          {isRegister ? 'Already have an account?' : "Don't have an account?"}
-          {' '}
-          <button
-            className="link-btn"
-            onClick={() => { setIsRegister(!isRegister); setError(null) }}
-          >
+          {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
+          <button className="link-btn" onClick={() => { setIsRegister(!isRegister); setError(null) }}>
             {isRegister ? 'Sign In' : 'Register'}
           </button>
         </p>
@@ -83,63 +65,25 @@ function Login() {
         {error && <div className="alert alert-error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          {/* Show name field only for registration */}
           {isRegister && (
             <div className="form-group">
               <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name || ''}
-                onChange={handleChange}
-                placeholder="Your name"
-                className="form-input"
-              />
+              <input type="text" id="name" name="name" value={formData.name || ''} onChange={handleChange} placeholder="Your name" className="form-input" />
             </div>
           )}
-
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="you@example.com"
-              className="form-input"
-              required
-            />
+            <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="you@example.com" className="form-input" required />
           </div>
-
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="form-input"
-              required
-            />
+            <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" className="form-input" required />
           </div>
-
-          <button
-            type="submit"
-            className="btn btn-primary btn-full"
-            disabled={loading}
-          >
-            {loading
-              ? 'Please wait...'
-              : isRegister ? 'Create Account' : 'Sign In'
-            }
+          <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
+            {loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Sign In'}
           </button>
         </form>
 
-        {/* Demo credentials hint for testing */}
         {!isRegister && (
           <div className="demo-hint">
             <small>Demo: test@example.com / password123</small>

@@ -1,33 +1,32 @@
-# DevBoard — Full-Stack Learning Boilerplate
-
+# 🧱 DevBoard — Full-Stack Learning Boilerplate
 ### React + Vite + Node.js + Express
 
-> A hands-on, fill-in-the-blanks teaching project designed to give you real-world full-stack experience.
+> A hands-on, fill-in-the-blanks teaching project designed to give you real-world full-stack experience for the San Diego software market.
 
 ---
 
-## What You'll Learn
+## 📚 What You'll Learn
 
-| Level | Topic                                     | Where                        |
-| ----- | ----------------------------------------- | ---------------------------- |
-| 1     | Project structure & tooling               | Root config files            |
-| 2     | Vite + React setup                        | `client/`                    |
-| 3     | Component architecture                    | `client/src/components/`     |
-| 4     | React Hooks (useState, useEffect, custom) | `client/src/hooks/`          |
-| 5     | React Context (global state)              | `client/src/context/`        |
-| 6     | React Router (SPA navigation)             | `client/src/App.jsx`         |
-| 7     | HTTP requests with Axios                  | `client/src/services/api.js` |
-| 8     | Node.js + Express server                  | `server/index.js`            |
-| 9     | REST API design (CRUD routes)             | `server/routes/`             |
-| 10    | Controllers (business logic)              | `server/controllers/`        |
-| 11    | Middleware (auth, error handling)         | `server/middleware/`         |
-| 12    | Data models (in-memory → DB ready)        | `server/models/`             |
-| 13    | JWT Authentication flow                   | `server/routes/auth.js`      |
-| 14    | Environment variables & config            | `.env` files                 |
+| Level | Topic | Where |
+|-------|-------|--------|
+| 1 | Project structure & tooling | Root config files |
+| 2 | Vite + React setup | `client/` |
+| 3 | Component architecture | `client/src/components/` |
+| 4 | React Hooks (useState, useEffect, custom) | `client/src/hooks/` |
+| 5 | React Context (global state) | `client/src/context/` |
+| 6 | React Router (SPA navigation) | `client/src/App.jsx` |
+| 7 | HTTP requests with Axios | `client/src/services/api.js` |
+| 8 | Node.js + Express server | `server/index.js` |
+| 9 | REST API design (CRUD routes) | `server/routes/` |
+| 10 | Controllers (business logic) | `server/controllers/` |
+| 11 | Middleware (auth, error handling) | `server/middleware/` |
+| 12 | Data models (in-memory → DB ready) | `server/models/` |
+| 13 | JWT Authentication flow | `server/routes/auth.js` |
+| 14 | Environment variables & config | `.env` files |
 
 ---
 
-## Project Structure
+## 🗂️ Project Structure
 
 ```
 devboard/
@@ -75,7 +74,7 @@ devboard/
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### 1. Install dependencies
 
@@ -111,17 +110,15 @@ npm run dev
 
 ---
 
-## How to Use This Boilerplate
+## 🔍 How to Use This Boilerplate
 
 Every file has:
-
 - **Explanation comments** — what each piece does and why
 - **`// TODO:`** blocks — where YOU write the code
 - **`// HINT:`** comments — pointing you toward docs/concepts
 - **`// RESOURCE:`** links — official docs and reading material
 
 ### Learning Strategy
-
 1. Read the file top to bottom before writing any code
 2. Try the TODO without hints first
 3. Check the HINT if stuck for 10–15 minutes
@@ -130,22 +127,26 @@ Every file has:
 
 ---
 
-## Tech Stack
+## 📦 Tech Stack
 
-| Tool                | Purpose                            | Docs                                       |
-| ------------------- | ---------------------------------- | ------------------------------------------ |
-| **Vite**            | Lightning-fast frontend build tool | https://vitejs.dev                         |
-| **React 18**        | UI component library               | https://react.dev                          |
-| **React Router v6** | Client-side routing                | https://reactrouter.com                    |
-| **Axios**           | HTTP client                        | https://axios-http.com                     |
-| **Node.js**         | JavaScript runtime for server      | https://nodejs.org                         |
-| **Express 4**       | Web server framework               | https://expressjs.com                      |
-| **bcryptjs**        | Password hashing                   | https://www.npmjs.com/package/bcryptjs     |
-| **jsonwebtoken**    | JWT auth tokens                    | https://www.npmjs.com/package/jsonwebtoken |
-| **dotenv**          | Environment variable loader        | https://www.npmjs.com/package/dotenv       |
-| **cors**            | Cross-origin resource sharing      | https://www.npmjs.com/package/cors         |
+| Tool | Purpose | Docs |
+|------|---------|------|
+| **Vite** | Lightning-fast frontend build tool | https://vitejs.dev |
+| **React 18** | UI component library | https://react.dev |
+| **React Router v6** | Client-side routing | https://reactrouter.com |
+| **Axios** | HTTP client | https://axios-http.com |
+| **Node.js** | JavaScript runtime for server | https://nodejs.org |
+| **Express 4** | Web server framework | https://expressjs.com |
+| **bcryptjs** | Password hashing | https://www.npmjs.com/package/bcryptjs |
+| **jsonwebtoken** | JWT auth tokens | https://www.npmjs.com/package/jsonwebtoken |
+| **dotenv** | Environment variable loader | https://www.npmjs.com/package/dotenv |
+| **cors** | Cross-origin resource sharing | https://www.npmjs.com/package/cors |
 
-## Completion Checklist
+---
+
+---
+
+## ✅ Completion Checklist
 
 - [ ] Server starts without errors
 - [ ] Frontend loads at localhost:5173
@@ -160,7 +161,7 @@ Every file has:
 
 ---
 
-## Recommended Tools
+## 🛠️ Recommended Tools
 
 - **VS Code** — https://code.visualstudio.com
 - **Postman** — API testing — https://postman.com
@@ -170,4 +171,4 @@ Every file has:
 
 ---
 
-_Built as a teaching project. Every TODO you complete is a real pattern used in production apps._
+*Built as a teaching project. Every TODO you complete is a real pattern used in production apps.*
