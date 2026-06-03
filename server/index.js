@@ -6,7 +6,7 @@
 //
 // Middleware = functions that run on EVERY request before reaching the route handler.
 // Order matters — they execute top to bottom.
-require('dotenv').config(); 
+ 
 
 const express    = require('express')
 const cors       = require('cors')
