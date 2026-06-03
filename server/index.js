@@ -6,6 +6,7 @@
 //
 // Middleware = functions that run on EVERY request before reaching the route handler.
 // Order matters — they execute top to bottom.
+require('dotenv').config(); 
 
 const express    = require('express')
 const cors       = require('cors')
@@ -23,9 +24,10 @@ const PORT = process.env.PORT || 3001
 // TODO: Enable CORS so the frontend (localhost:5173) can talk to this server
 // HINT: app.use(cors({ origin: 'http://localhost:5173', credentials: true }))
 // RESOURCE: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-
+app.use(cors({ origin: 'http://localhost:5173', credentials: true}))
 
 // TODO: Enable JSON body parsing so req.body is available in controllers
+app.use(express.json())
 // HINT: app.use(express.json())
 
 
@@ -39,6 +41,7 @@ app.use((req, res, next) => {
 
 // TODO: Mount the auth router at '/api/auth'
 // HINT: app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes)
 
 
 // TODO: Mount the tasks router at '/api/tasks'

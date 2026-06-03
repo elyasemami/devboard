@@ -9,6 +9,7 @@
 // NEVER store plain-text passwords.
 // bcrypt.hash('password123', 10) → '$2a$10$...' (a 60-char one-way hash)
 // bcrypt.compare('password123', hash) → true/false
+ 
 
 const bcrypt = require('bcryptjs')
 
@@ -31,6 +32,7 @@ const UserModel = {
   findByEmail: (email) => {
     // TODO: Return the user whose email matches
     // HINT: users.find(u => u.email === email.toLowerCase())
+
   },
 
   findById: (id) => {
@@ -41,16 +43,18 @@ const UserModel = {
   create: async ({ name, email, password }) => {
     // TODO: Step 1 — Check if email already taken
     // HINT: if (UserModel.findByEmail(email)) throw new Error('Email already registered')
-
+    if( await UserModel.findByEmail(email)) throw new Error('Email Already Registered!')
     // TODO: Step 2 — Hash the password
     // HINT: const hashedPassword = await bcrypt.hash(password, 10)
-
+    const hashedPassword = await bcrypt.hash(password, 10)
     // TODO: Step 3 — Build and push the new user object
     // HINT: { id: Date.now().toString(), name, email: email.toLowerCase(), password: hashedPassword, createdAt: new Date().toISOString() }
-
+    const newUser = { id: Date.now().toString(), name, email: email.toLowerCase(), password: hashedPassword, createdAt: new Date().toISOString() }
     // TODO: Step 4 — Return the user WITHOUT the password field
     // HINT: const { password: _, ...safeUser } = newUser
     //        return safeUser
+    const { password: unused, ...safeUser } = newUser;
+    return safeUser
   },
 
   verifyPassword: async (plainText, hash) => {
