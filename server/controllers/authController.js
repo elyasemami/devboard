@@ -17,12 +17,7 @@ const register = async (req, res, next) => {
   try {
     // TODO: Step 1 — Destructure name, email, password from req.body
     const { name, email, password } = req.body;
-    // TODO: Step 2 — Validate all three fields are present
-    // HINT: if (!name || !email || !password) return res.status(400).json({...})
-    if(!name || !email || !password) return res.status(400).json({message: 'Username, Email, and Password must be submitted!'})
-
-    // TODO: Step 3 — Validate password is at least 6 characters
-    if(password.length<8) return res.status(400).json({message: 'Password must be bigger than 8 characters.'})
+    
     // TODO: Step 4 — Create the user
     const user = await UserModel.create({name, email, password})
     // HINT: const user = await UserModel.create({ name, email, password })
@@ -41,6 +36,7 @@ const register = async (req, res, next) => {
     )
     // TODO: Step 6 — Respond with 201 Created
     // HINT: res.status(201).json({ message: 'Account created', user, token })
+    
     res.status(201).json({ message: 'Account Created!', user, token})
   } catch (error) {
     if (error.message === 'Email already registered') {
@@ -54,9 +50,9 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     // TODO: Step 1 — Destructure email, password from req.body
-    
+    const {email, password} = req.body;
     // TODO: Step 2 — Validate both fields are present
-
+   
     // TODO: Step 3 — Find the user by email
     // HINT: const user = UserModel.findByEmail(email)
     // HINT: If !user → 401: "Invalid email or password"
