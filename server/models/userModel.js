@@ -31,13 +31,12 @@ initializeUsers()
 const UserModel = {
   findByEmail: (email) => {
     // TODO: Return the user whose email matches
-    // HINT: users.find(u => u.email === email.toLowerCase())
-
+    users.find(u => u.email === email.toLowerCase())
   },
 
   findById: (id) => {
     // TODO: Return the user whose id matches
-    // HINT: users.find(u => u.id === id)
+    users.find(u => u.id === id)
   },
 
   create: async ({ name, email, password }) => {
@@ -54,13 +53,13 @@ const UserModel = {
     // HINT: const { password: _, ...safeUser } = newUser
     //        return safeUser
     const { password: unused, ...safeUser } = newUser;
-    return safeUser
+      return safeUser
   },
 
   verifyPassword: async (plainText, hash) => {
     // TODO: Compare the plain text password to the stored hash
-    // HINT: return bcrypt.compare(plainText, hash)
+    return bcrypt.compare(plainText, hash)
+
   },
 }
-
 module.exports = UserModel

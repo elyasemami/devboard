@@ -18,11 +18,9 @@ router.get('/:id', authenticate, getTask)
 router.post('/',   authenticate, createTask)
 
 // TODO: Add the PUT route for updating a task
-// HINT: router.put('/:id', authenticate, updateTask)
-
 
 // TODO: Add the DELETE route for deleting a task
-// HINT: router.delete('/:id', authenticate, deleteTask)
+
 
 
 module.exports = router

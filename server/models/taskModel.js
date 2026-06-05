@@ -35,46 +35,37 @@ let tasks = [
 const TaskModel = {
   findAll: (userId) => {
     // TODO: Return all tasks belonging to userId, newest first
-    // HINT: tasks.filter(t => t.userId === userId)
-    //             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+   
   },
 
   findById: (id, userId) => {
     // TODO: Return the task matching both id AND userId
     // The userId check prevents users from accessing each other's tasks
-    // HINT: tasks.find(t => t.id === id && t.userId === userId)
+    
   },
 
   create: ({ userId, title, description, status = 'todo', priority = 'medium' }) => {
     // TODO: Step 1 — Validate title is present
-    // HINT: if (!title?.trim()) throw new Error('Title is required')
+   
 
     // TODO: Step 2 — Build the new task object with a unique id
-    // HINT: { id: Date.now().toString(), userId, title: title.trim(), description: description?.trim() || '', status, priority, createdAt: new Date().toISOString() }
-
+   
     // TODO: Step 3 — Push to tasks array and return the new task
   },
 
   update: (id, userId, updates) => {
     // TODO: Step 1 — Find the existing task (use findById for security)
-    // HINT: const task = TaskModel.findById(id, userId)
-    // HINT: if (!task) return null
-
+  
     // TODO: Step 2 — Only update allowed fields (never let users change userId)
-    // HINT: const allowedFields = ['title', 'description', 'status', 'priority']
-    //       allowedFields.forEach(field => {
-    //         if (updates[field] !== undefined) task[field] = updates[field]
-    //       })
+
 
     // TODO: Step 3 — Set updatedAt and return the modified task
-    // HINT: task.updatedAt = new Date().toISOString()
+    
   },
 
   delete: (id, userId) => {
     // TODO: Find the index, splice it out, return true/false
-    // HINT: const index = tasks.findIndex(t => t.id === id && t.userId === userId)
-    // HINT: if (index === -1) return false
-    // HINT: tasks.splice(index, 1); return true
+
   },
 }
 
