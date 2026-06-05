@@ -30,9 +30,15 @@ const authenticate = async (req, res, next) => {
     // TODO: Step 4 — Verify the token
     // jwt.verify throws an error if the token is invalid or expired
     // RESOURCE: https://www.npmjs.com/package/jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
+    const decoded = req.jwt.verify(token);
+
     // TODO: Step 5 — Find the user by the id inside the decoded token
-    // TODO: Step 6 — Attach the user to the request (without the password)
-    // TODO: Step 7 — Call next() to pass control to the route handler
+    //const user = await UserModel.findById(decoded.id).select("-password");
+
+    //req.user = user;
+
+    req.user = decoded;
+    next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
       return res
