@@ -6,18 +6,19 @@
 // Mounted LAST in index.js, after all routes.
 
 const errorHandler = (err, req, res, next) => {
-  console.error(`[ERROR] ${req.method} ${req.path}:`, err.message)
+  console.error(`[ERROR] ${req.method} ${req.path}:`, err.message);
 
-  const statusCode = err.statusCode || err.status || 500
-  const message    = process.env.NODE_ENV === 'production' && statusCode === 500
-    ? 'Internal Server Error'
-    : err.message || 'Something went wrong'
+  const statusCode = err.statusCode || err.status || 500;
+  const message =
+    process.env.NODE_ENV === "production" && statusCode === 500
+      ? "Internal Server Error"
+      : err.message || "Something went wrong";
 
   res.status(statusCode).json({
     success: false,
     message,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
-  })
-}
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+  });
+};
 
-module.exports = errorHandler
+module.exports = errorHandler;
