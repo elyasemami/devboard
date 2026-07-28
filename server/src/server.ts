@@ -4,9 +4,6 @@ import {
   type ServerResponse,
 } from "node:http";
 import { randomUUID } from "node:crypto";
-import { push } from "node:stream/iter";
-import { uptime } from "node:process";
-import { read } from "node:fs";
 
 type Project = {
   id: string;
