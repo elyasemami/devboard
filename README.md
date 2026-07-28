@@ -34,15 +34,13 @@ devboard/
     ├── index.js               ← Server entry point
     ├── package.json
     ├── .env.example
-    ├── routes/                ← URL endpoints
-    │   ├── tasks.js
-    │   └── auth.js
+    |
     ├── controllers/           ← Business logic
-    │   ├── taskController.js
-    │   └── authController.js
+    |
     ├── middleware/            ← Request interceptors
     │   ├── authMiddleware.js
     │   └── errorHandler.js
+    |
     └── models/               ← Data structures
         ├── taskModel.js
         └── userModel.js
