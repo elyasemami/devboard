@@ -6,7 +6,7 @@ import { pool } from "./pool.ts";
 
 const migrationsDir = join(
   dirname(fileURLToPath(import.meta.url)),
-  "../../migrations",
+  "server/db/migrations",
 );
 
 export async function migrate(): Promise<void> {
