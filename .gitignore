@@ -8,7 +8,7 @@ build/
 .postman
 .postman/
 
-# SQLite database file — runtime artifact, not source
+# postgres database file — runtime artifact, not source
 data/
 *.db
 *.db-shm
