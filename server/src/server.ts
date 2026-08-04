@@ -1,14 +1,11 @@
-import {
-  createServer,
-  type IncomingMessage,
-  type ServerResponse,
-} from "node:http";
+import express, { type ErrorRequestHandler } from "express";
+import { error } from "node:console";
 import { randomUUID } from "node:crypto";
 
 type Project = {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   createdAt: string;
 };
 
@@ -25,66 +22,66 @@ function isCreateProjectBody(value: unknown): value is CreateProjectBody {
   return true;
 }
 
-function sendJson(res: ServerResponse, status: number, body: unknown): void {
-  const payload = JSON.stringify(body);
-  res.writeHead(status, {
-    "content-type": "application/json; charset=utf-8",
-    "content-length": Buffer.byteLength(payload),
-  });
-  res.end(payload);
-}
+// express application
+const app = express();
 
-async function readJsonBody(req: IncomingMessage): Promise<unknown> {
-  const chunks: Buffer[] = [];
-  let size = 0;
-  for await (const chunk of req as AsyncIterable<Buffer>) {
-    size += chunk.length;
-    if (size > 1000000) throw new Error("payload too large");
-    chunks.push(chunk);
-  }
-  if (chunks.length === 0) return undefined;
-  return JSON.parse(Buffer.concat(chunks).toString("utf8"));
-}
+// req total size limit
+app.use(express.json({ limit: "1mb" }));
 
-const server = createServer(async (req, res) => {
-  const url = new URL(
-    req.url ?? "/",
-    `http://${req.headers.host ?? "localhost"}`,
-  );
-  const route = `${req.method} ${url.pathname}`;
-
-  try {
-    switch (route) {
-      case "GET /health":
-        return sendJson(res, 200, { status: "ok", uptime: process.uptime() });
-
-      case "GET /api/projects":
-        return sendJson(res, 200, { data: projects });
-
-      case "POST /api/projects": {
-        const body = await readJsonBody(req);
-        if (!isCreateProjectBody(body)) {
-          return sendJson(res, 400, {
-            error: "name is required and must not be non-empty",
-          });
-        }
-        const project: Project = {
-          id: randomUUID(),
-          name: body.name.trim(),
-          description: body.description?.trim() ?? "",
-          createdAt: new Date().toISOString(),
-        };
-        projects.push(project);
-        res.setHeader("location", `/api/projects/${project.id}`);
-        return sendJson(res, 201, { data: project });
-      }
-      default:
-        return sendJson(res, 404, { error: `No route for ${route}` });
-    }
-  } catch (err) {
-    console.error(err);
-    return sendJson(res, 500, { error: `Internal Server Error` });
-  }
+// health status
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
 });
-const port = Number(process.env.PORT ?? 3000);
-server.listen(port, () => console.log(`listening on http://localhost:${port}`));
+
+// getting all projects
+app.get("/b/projects", (_req, res) => {
+  const page = parseInt(_req.query.page as string) || 1;
+  const limit = parseInt(_req.query.limit as string) || 20;
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+
+  const paginatedProjects = projects.slice(startIndex, endIndex);
+
+  res.json({
+    page,
+    limit,
+    totalItems: projects.length,
+    totalPages: Math.ceil(projects.length / limit),
+    data: paginatedProjects,
+  });
+});
+
+app.post("/api/project", (_req, res) => {
+  if (!isCreateProjectBody(_req.body)) {
+    res.status(400).json({ error: "name is required and must be non-empty" });
+    return;
+  }
+  const project: Project = {
+    id: randomUUID(),
+    name: _req.body.name,
+    description: _req.body.description,
+    createdAt: new Date().toISOString(),
+  };
+  projects.push(project);
+  res
+    .status(201)
+    .location(`/api/projects/${project.id}`)
+    .json({ data: project });
+});
+
+app.use((_req, res) => {
+  res.status(404).json({ error: "Not Found" });
+});
+
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).json({ error: "Internal Server Error " });
+};
+
+app.use(errorHandler);
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
