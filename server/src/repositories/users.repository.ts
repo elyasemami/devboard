@@ -1,5 +1,6 @@
 import { pool } from "../db/pool.ts";
 
+//shape of the user coming from the database
 interface UserRow {
   id: string;
   email: string;
@@ -7,7 +8,7 @@ interface UserRow {
   created_at: Date;
   updated_at: Date;
 }
-
+//shape of the user-object
 export interface User {
   id: string;
   email: string;
@@ -15,7 +16,7 @@ export interface User {
   created_at: Date;
   updated_at: Date;
 }
-
+//return the user shape
 function toUser(row: UserRow): User {
   return {
     id: row.id,
@@ -25,7 +26,6 @@ function toUser(row: UserRow): User {
     updated_at: row.updated_at,
   };
 }
-
 function isUniqueViolation(err: unknown): boolean {
   return (
     typeof err === "object" &&
@@ -33,4 +33,22 @@ function isUniqueViolation(err: unknown): boolean {
     "code" in err &&
     (err as { code: string }).code === "23505"
   );
+}
+export async function insertUser(
+  email: string,
+  passwordHash: string,
+): Promise<User> {
+  try {
+    const result = await pool.query<UserRow>(
+      `INSERT INTO users(email, password_hash), created_at`,
+      [email, passwordHash],
+    );
+    const row = result.rows[0];
+    if (!row)
+      throw new Error("InsertUser: INSERT ... RETURNING produced no row");
+    return toUser(row);
+  } catch (err) {
+    if (isUniqueViolation(err)) throw new Error("EMAIL_TAKEN");
+    throw err;
+  }
 }
