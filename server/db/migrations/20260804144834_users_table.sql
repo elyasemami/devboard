@@ -27,6 +27,7 @@ CREATE TABLE user_profiles (
     avatar_url TEXT,
     bio TEXT,
     phone TEXT,
+    user_availability user_status NOT NULL DEFAULT 'available',
     created_at TIMESTAMP
     WITH
         TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -67,3 +68,20 @@ CREATE TABLE tasks (
 );
 
 -- migrate:down
+-- Drop tables
+DROP TABLE IF EXISTS projects;
+
+DROP TABLE IF EXISTS users;
+
+DROP TABLE IF EXISTS user_profiles;
+
+DROP TABLE IF EXISTS tasks;
+
+-- Drop enum types
+DROP TYPE IF EXISTS roles;
+
+DROP TYPE IF EXISTS project_status;
+
+DROP TYPE IF EXISTS user_status;
+
+DROP TYPE IF EXISTS tasks_status;
