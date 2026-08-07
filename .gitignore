@@ -13,3 +13,7 @@ data/
 *.db
 *.db-shm
 *.db-wal
+server.crt
+server.key
+*.crt
+*.key
