@@ -44,7 +44,7 @@ export async function insertUser(
 ): Promise<User> {
   try {
     const result = await pool.query<UserRow>(
-      `INSERT INTO users(email, password_hash), created_at`,
+      `INSERT INTO users(email, password_hash) VALUES ($1, $2) RETURNING id, email, password_hash, created_at`,
       [email, passwordHash],
     );
     const row = result.rows[0];
@@ -72,4 +72,9 @@ export async function findUserByName(name: string): Promise<User | null> {
     [name],
   );
   return result.rows[0] ? toUser(result.rows[0]) : null;
+}
+
+// check this after tests because the unknown can create problems
+export async function deleteUser(id: string): Promise<void | unknown> {
+  return await pool.query(`DELETE FROM users WHERE id = $1`, [id]);
 }
