@@ -2,15 +2,21 @@
 import { Router } from "express";
 import { uptime } from "node:process";
 import { z } from "zod";
+import { register } from "./auth.service.ts";
 
-const credentialsSchema = z.object();
+const credentialsSchema = z.object({
+  email: z.email(),
+  password: z.string().min(8).max(256),
+});
 
 const router = Router();
 
-router.post("/register", (req, res) => {
-  res
-    .status(201)
-    .json({ ok: true, todo: "not implemented", uptime: process.uptime() });
+router.post("/register", async (req, res) => {
+  const parsed = credentialsSchema.safeParse(req.body);
+  if (!parsed.success)
+    return res.status(400).json({ error: parsed.error.flatten() });
+  const session = await register(parsed.data.email, parsed.data.password);
+  res.status(201).json({ valid: parsed.data.email });
 });
 
 export default router;
