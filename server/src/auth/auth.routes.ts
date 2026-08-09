@@ -7,6 +7,7 @@ import { register } from "./auth.service.ts";
 const credentialsSchema = z.object({
   email: z.email(),
   password: z.string().min(8).max(256),
+  fullName: z.string().min(1).max(200),
 });
 
 const router = Router();
@@ -15,8 +16,12 @@ router.post("/register", async (req, res) => {
   const parsed = credentialsSchema.safeParse(req.body);
   if (!parsed.success)
     return res.status(400).json({ error: parsed.error.flatten() });
-  const session = await register(parsed.data.email, parsed.data.password);
-  res.status(201).json({ valid: parsed.data.email });
+  const session = await register(
+    parsed.data.email,
+    parsed.data.password,
+    parsed.data.fullName,
+  );
+  res.status(201).json({ ok: true, sessionId: session.id });
 });
 
 export default router;

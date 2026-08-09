@@ -38,7 +38,7 @@ export async function insertSession(
   expires_at: Date,
 ): Promise<Session> {
   const result = await pool.query<SessionRow>(
-    `INSERT INTO sessions(id, user_id, created_at, expires_at) VALUES ($1,$2,$3)`,
+    `INSERT INTO sessions(id, user_id, created_at, expires_at) VALUES ($1,$2,$3,$4) RETURNING *`,
     [id, user_id, created_at, expires_at],
   );
   const row = result.rows[0];

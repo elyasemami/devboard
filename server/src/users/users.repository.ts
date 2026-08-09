@@ -39,13 +39,14 @@ function isUniqueViolation(err: unknown): boolean {
 }
 
 export async function insertUser(
+  fullName: string,
   email: string,
   passwordHash: string,
 ): Promise<User> {
   try {
     const result = await pool.query<UserRow>(
-      `INSERT INTO users(email, password_hash) VALUES ($1, $2) RETURNING id, email, password_hash, created_at`,
-      [email, passwordHash],
+      `INSERT INTO users(full_name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, full_name, email, created_at`,
+      [fullName, email, passwordHash],
     );
     const row = result.rows[0];
     if (!row)
