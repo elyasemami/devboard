@@ -3,6 +3,8 @@ import { Router } from "express";
 import { uptime } from "node:process";
 import { z } from "zod";
 
+const credentialsSchema = z.object();
+
 const router = Router();
 
 router.post("/register", (req, res) => {
