@@ -2,18 +2,24 @@
 import { Router } from "express";
 import { uptime } from "node:process";
 import { z } from "zod";
-import { login, register } from "./auth.service.ts";
+import { login, logout, register } from "./auth.service.ts";
 
 const masterSchema = z.object({
   email: z.email(),
   password: z.string().min(8).max(256),
   fullName: z.string().min(1).max(200),
+  sessionId: z.string().max(256),
 });
 
 const router = Router();
 
 router.post("/register", async (req, res) => {
-  const parsed = masterSchema.safeParse(req.body);
+  const regiserSchema = masterSchema.pick({
+    fullName: true,
+    email: true,
+    password: true,
+  });
+  const parsed = regiserSchema.safeParse(req.body);
   if (!parsed.success)
     return res.status(400).json({ error: parsed.error.flatten() });
   const session = await register(
@@ -21,6 +27,7 @@ router.post("/register", async (req, res) => {
     parsed.data.password,
     parsed.data.fullName,
   );
+  if (!session) throw new Error("There was a problem try again!");
   res.status(201).json({ message: "Registered" });
 });
 
@@ -38,4 +45,10 @@ router.post("/login", async (req, res) => {
   res.status(201).json({ message: "Login Successfull!" });
 });
 
+router.post("/logout", async (req, res) => {
+  const logoutSchema = masterSchema.pick({ sessionId: true });
+  const parsed = logoutSchema.safeParse(req.body);
+  const sessionId = await parseCookies(req.headers.cookie)["seesion_id"];
+  res.status(201).json({ message: "Logout Successfull!" });
+});
 export default router;
