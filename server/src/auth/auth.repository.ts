@@ -41,7 +41,6 @@ export async function insertSession(
     `INSERT INTO sessions(id, user_id, created_at, expires_at) VALUES ($1,$2,$3)`,
     [id, user_id, created_at, expires_at],
   );
-
   const row = result.rows[0];
   if (!row) throw new Error("InsertUser: INSERT ... RETURNING produced no row");
   return toSession(row);

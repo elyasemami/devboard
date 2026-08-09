@@ -17,3 +17,7 @@ server.crt
 server.key
 *.crt
 *.key
+
+
+ARCHITECTURE.md
+OPUS5NOTES.md

@@ -14,7 +14,7 @@ export interface User {
   id: string;
   fullName: string;
   email: string;
-  password_hash: string;
+  passwordHash: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -24,7 +24,7 @@ function toUser(row: UserRow): User {
     id: row.id,
     fullName: row.full_name,
     email: row.email,
-    password_hash: row.password_hash,
+    passwordHash: row.password_hash,
     created_at: row.created_at,
     updated_at: row.updated_at,
   };
@@ -61,15 +61,6 @@ export async function findUserByEmail(email: string): Promise<User | null> {
   const result = await pool.query<UserRow>(
     `SELECT id, full_name, email, password_hash, created_at FROM users WHERE email =$1`,
     [email],
-  );
-  return result.rows[0] ? toUser(result.rows[0]) : null;
-}
-
-// There is problem with this function becasue it can return multiple users whose name matches since name is not unique
-export async function findUserByName(name: string): Promise<User | null> {
-  const result = await pool.query<UserRow>(
-    `Select id, full_name, email, password_hash, created_at FROM users WHERE name = $1`,
-    [name],
   );
   return result.rows[0] ? toUser(result.rows[0]) : null;
 }
