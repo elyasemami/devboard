@@ -8,7 +8,6 @@ const masterSchema = z.object({
   email: z.email(),
   password: z.string().min(8).max(256),
   fullName: z.string().min(1).max(200),
-  sessionId: z.string().max(256),
 });
 
 const router = Router();
@@ -46,9 +45,8 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", async (req, res) => {
-  const logoutSchema = masterSchema.pick({ sessionId: true });
-  const parsed = logoutSchema.safeParse(req.body);
-  const sessionId = await parseCookies(req.headers.cookie)["seesion_id"];
+  const sessionId = await parseCookies(req.headers.cookie)["session_id"];
+  if (sessionId) await logout(sessionId);
   res.status(201).json({ message: "Logout Successfull!" });
 });
 export default router;
