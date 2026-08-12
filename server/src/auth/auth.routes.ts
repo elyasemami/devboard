@@ -44,9 +44,23 @@ router.post("/login", async (req, res) => {
   res.status(201).json({ message: "Login Successfull!" });
 });
 
-router.post("/logout", async (req, res) => {
-  const sessionId = await parseCookies(req.headers.cookie)["session_id"];
-  if (sessionId) await logout(sessionId);
-  res.status(201).json({ message: "Logout Successfull!" });
+router.delete("/logout", async (req, res) => {
+  try {
+    const sessionId = req.cookies["seesion_id"];
+
+    if (!sessionId) {
+      return res.status(400).json({ error: "No active session found" });
+    }
+    await logout(sessionId);
+
+    res.clearCookie("session_id", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
+    return res.status(200).json({ message: "Logout Successful!" });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error." });
+  }
 });
 export default router;
