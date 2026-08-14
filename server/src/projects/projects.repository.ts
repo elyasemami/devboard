@@ -1,4 +1,5 @@
 import { pool } from "../db/pool.ts";
+import { findUserByEmail } from "../users/users.repository.ts";
 
 const ProjectStatusRow = {
   Acitve: "active",
@@ -65,8 +66,9 @@ export async function insertProject(
   created_at: Date,
   updated_at: Date,
 ): Promise<Project> {
-  const ProjectOwner;
+  const ProjectOwner = await pool.query<>;
   const result = await pool.query<ProjectRow>(
+  
     `INSERT INTO projects(id, name, description, project_status,
     current_owner_id )`,
   );
