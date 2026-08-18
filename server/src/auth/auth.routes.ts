@@ -1,6 +1,5 @@
 // src/auth/auth.routes.ts
 import { Router } from "express";
-import { uptime } from "node:process";
 import { z } from "zod";
 import { login, register } from "./auth.service.ts";
 
