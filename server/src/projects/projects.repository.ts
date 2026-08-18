@@ -1,75 +1,99 @@
+import { Pool, type PoolClient, DatabaseError } from "pg";
 import { pool } from "../db/pool.ts";
-import { findUserByEmail } from "../users/users.repository.ts";
 
-const ProjectStatusRow = {
-  Acitve: "active",
+/** Anything that can run a query: 
+ * the pool, or a client 
+ * inside a transaction. */
+export type Executor = Pool | PoolClient;
+
+export const ProjectStatus = {
+  Active: "active",
   Inactive: "inactive",
   Completed: "completed",
   Cancelled: "cancelled",
 } as const;
 
-type ProjectStatusRow =
-  (typeof ProjectStatusRow)[keyof typeof ProjectStatusRow];
+export type ProjectStatus = 
+(typeof ProjectStatus)[keyof typeof ProjectStatus];
 
+/** DB transport shape: snake_case, exactly 
+ * what pg hands back. */
 interface ProjectRow {
+  id: string;
   name: string;
-  description: string;
-  project_status: ProjectStatusRow;
+  description: string | null;
+  project_status: ProjectStatus;
   current_owner_id: string;
   created_by: string;
   created_at: Date;
   updated_at: Date;
 }
 
+/** Domain shape: what the rest 
+ * of the app works with. */
 export interface Project {
-  Name: string;
-  Description: string;
-  projectStatus: string;
+  id: string;
+  name: string;
+  description: string | null;
+  status: ProjectStatus;
   currentOwnerId: string;
   createdBy: string;
   createdAt: Date;
+  updatedAt: Date;
 }
 
-/**
- *
- * @param row
- * @returns
- * we need to query the database to get the owner of a project,
- * and then insert the project into the table.
- */
-function toProjcet(row: ProjectRow): Project {
+/** Input shape: only what a 
+ * caller can actually know. */
+export interface NewProject {
+  name: string;
+  description?: string | null;
+  status?: ProjectStatus;
+  currentOwnerId: string;
+  createdBy: string;
+}
+
+function toProject(row: ProjectRow): Project {
   return {
-    Name: row.name,
-    Description: row.description,
-    projectStatus: row.project_status,
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    status: row.project_status,
     currentOwnerId: row.current_owner_id,
     createdBy: row.created_by,
     createdAt: row.created_at,
+    updatedAt: row.updated_at,
   };
 }
-// duplicate date submitted to pg
-function isUniqueViolation(err: unknown): boolean {
-  return (
-    typeof err === "object" &&
-    err !== null &&
-    "code" in err &&
-    (err as { code: string }).code === "23505"
-  );
+
+/** 23505 = unique_violation. 
+ * Codes are stable across PG 
+ * versions; messages are not. */
+export function isUniqueViolation(err: unknown): err is DatabaseError {
+  return err instanceof DatabaseError && err.code === "23505";
 }
 
+const INSERT_PROJECT = `
+  INSERT INTO projects (name, description, project_status, current_owner_id, created_by)
+  VALUES ($1, $2, $3, $4, $5)
+  RETURNING id, name, description, project_status,
+            current_owner_id, created_by, created_at, updated_at
+`;
+
 export async function insertProject(
-  name: string,
-  description: string,
-  project_status: string,
-  current_owner_id: string,
-  created_by: string,
-  created_at: Date,
-  updated_at: Date,
+  input: NewProject,
+  db: Executor = pool,
 ): Promise<Project> {
-  const ProjectOwner = await pool.query<>;
-  const result = await pool.query<ProjectRow>(
-  
-    `INSERT INTO projects(id, name, description, project_status,
-    current_owner_id )`,
-  );
+  const { rows } = await db.query<ProjectRow>(INSERT_PROJECT, [
+    input.name,                           
+    input.description ?? null,           
+    input.status ?? ProjectStatus.Active,  
+    input.currentOwnerId,                  
+    input.createdBy,                      
+  ]);
+
+  const row = rows[0];
+  if (!row) throw new 
+  Error("insertProject: INSERT ... RETURNING produced no row");
+
+  return toProject(row);
 }
