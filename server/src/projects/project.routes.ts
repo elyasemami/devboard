@@ -27,5 +27,6 @@ router.post("/newproject", async(req, res) =>{
         "There was a problem in New Project Creation."
     );
     res.status(201).json({message: "Project Created!"});
+    
 });
 export default router;
