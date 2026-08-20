@@ -21,7 +21,7 @@ export type ProjectStatus =
 interface ProjectRow {
   id: string;
   name: string;
-  description: string | null;
+  description: string;
   project_status: ProjectStatus;
   current_owner_id: string;
   created_by: string;
@@ -34,7 +34,7 @@ interface ProjectRow {
 export interface Project {
   id: string;
   name: string;
-  description: string | null;
+  description: string;
   status: ProjectStatus;
   currentOwnerId: string;
   createdBy: string;
@@ -46,8 +46,8 @@ export interface Project {
  * caller can actually know. */
 export interface NewProject {
   name: string;
-  description?: string | null;
-  status?: ProjectStatus;
+  description: string;
+  status: ProjectStatus;
   currentOwnerId: string;
   createdBy: string;
 }
@@ -85,7 +85,7 @@ export async function insertProject(
 ): Promise<Project> {
   const { rows } = await db.query<ProjectRow>(INSERT_PROJECT, [
     input.name,                           
-    input.description ?? null,           
+    input.description,           
     input.status ?? ProjectStatus.Active,  
     input.currentOwnerId,                  
     input.createdBy,                      
