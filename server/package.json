@@ -16,13 +16,18 @@
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.2",
     "@types/pg": "^8.20.3",
+    "prettier": "3.9.6",
     "typescript": "^7.0.2"
   },
   "dependencies": {
     "argon2": "^0.45.1",
     "cors": "^2.8.6",
+    "dbmate": "^2.35.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "pg": "^8.22.0"
+  },
+  "allowScripts": {
+    "argon2@0.45.1": true
   }
 }
